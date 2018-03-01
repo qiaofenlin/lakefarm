@@ -1,0 +1,476 @@
+<!doctype html>
+<html ng-app=survey ng-strict-di>
+<head>
+    <meta charset=utf-8>
+    <title>武林课堂</title>
+    <meta name=description content="">
+    <meta name=viewport content="width=device-width">
+    <link rel=stylesheet href=styles/vendor-a376bae906.css>
+    <link rel=stylesheet href=styles/app-583c29939d.css>
+</head>
+<body>
+<div class="container">
+    <div class="nav_back">
+        <acme-navbar creation-date="main.creationDate" class="ng-isolate-scope">
+            <nav class="navbar navbar-static-top navbar-inverse nav_back">
+                <div class="container-fluid">
+                    <div class="navbar-header"><a class="navbar-brand" href="#"><span
+                            class="glyphicon glyphicon-question-sign"></span> 资料库 </a><a class="navbar-brand"
+                                                                                          ui-sref="list"
+                                                                                          href="#/list"><span
+                            class="glyphicon glyphicon-plus"></span> 我的问卷 </a><a class="navbar-brand"
+                                                                                 href="#"><span
+                            class="glyphicon glyphicon-user"></span> 我的成绩　</a></div>
+                </div>
+            </nav>
+        </acme-navbar>
+    </div>
+    <div ui-view="" class="ng-scope">
+        <style class="ng-scope">.title {
+            text-align: center;
+        }
+        table td {
+            vertical-align: middle;
+        }</style>
+        <form name="form" class="ng-pristine ng-valid ng-scope">
+            <div class="leader"><h2 class="sub-header title ng-binding">这是我的第1份问卷</h2>
+                <div class="table-responsive">
+                    <table class="table width_his">
+                        <tbody ng-repeat="item in detail.content.questions" class="ng-scope">
+                        <tr>
+                            <td colspan="4" class="ng-binding"><label
+                                    class="glyphicon glyphicon-record btn btn-default">第1题</label>单选题
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="suv_title ng-binding">题目：问题0</td>
+                        </tr>
+                        <tr></tr>
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="0" name="0_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项一
+                            </td>
+                        </tr>
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="1" name="0_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项二
+                            </td>
+                        </tr>
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="2" name="0_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项三
+                            </td>
+                        </tr>
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="3" name="0_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项四
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tbody ng-repeat="item in detail.content.questions" class="ng-scope">
+                        <tr>
+                            <td colspan="4" class="ng-binding"><label
+                                    class="glyphicon glyphicon-record btn btn-default">第2题</label>单选题
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="suv_title ng-binding" id="01">题目：问题1</td>
+                        </tr>
+                        <tr></tr>
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="0" name="1_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项一
+                            </td>
+                        </tr><!-- end ngIf: item.type==0 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type==0 -->
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="1" name="1_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项二
+                            </td>
+                        </tr><!-- end ngIf: item.type==0 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type==0 -->
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="2" name="1_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项三
+                            </td>
+                        </tr><!-- end ngIf: item.type==0 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type==0 -->
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="3" name="1_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项四
+                            </td>
+                        </tr><!-- end ngIf: item.type==0 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type == 2 --></tbody>
+                        <!-- end ngRepeat: item in detail.content.questions -->
+                        <tbody ng-repeat="item in detail.content.questions" class="ng-scope">
+                        <tr>
+                            <td colspan="4" class="ng-binding"><label
+                                    class="glyphicon glyphicon-list-alt btn btn-default">第3题</label>文本题
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="suv_title ng-binding"　id="01">题目：问题2</td>
+                        </tr>
+                        <tr></tr><!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type == 2 -->
+                        <tr ng-if="item.type == 2" class="ng-scope">
+                            <td><textarea ng-model="item.votes" value="$index" name="2_2_option"
+                                          class="ng-pristine ng-untouched ng-valid ng-binding ng-empty"> 选项一 </textarea>
+                            </td>
+                        </tr><!-- end ngIf: item.type == 2 --></tbody>
+                        <!-- end ngRepeat: item in detail.content.questions -->
+                        <tbody ng-repeat="item in detail.content.questions" class="ng-scope">
+                        <tr>
+                            <td colspan="4" class="ng-binding"><label class="glyphicon glyphicon-check btn btn-default">第4题</label>多选题
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="suv_title ng-binding">题目：问题3</td>
+                        </tr>
+                        <tr></tr><!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <tr ng-if="item.type==1" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="checkbox" ng-model="item.votes[$index]" value="$index"
+                                                          name="3_1_option_0"
+                                                          class="ng-pristine ng-untouched ng-valid ng-empty"> 选项一
+                            </td>
+                        </tr><!-- end ngIf: item.type==1 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type==1 -->
+                        <tr ng-if="item.type==1" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="checkbox" ng-model="item.votes[$index]" value="$index"
+                                                          name="3_1_option_1"
+                                                          class="ng-pristine ng-untouched ng-valid ng-empty"> 选项二
+                            </td>
+                        </tr><!-- end ngIf: item.type==1 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type==1 -->
+                        <tr ng-if="item.type==1" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="checkbox" ng-model="item.votes[$index]" value="$index"
+                                                          name="3_1_option_2"
+                                                          class="ng-pristine ng-untouched ng-valid ng-empty"> 选项三
+                            </td>
+                        </tr><!-- end ngIf: item.type==1 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type==1 -->
+                        <tr ng-if="item.type==1" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="checkbox" ng-model="item.votes[$index]" value="$index"
+                                                          name="3_1_option_3"
+                                                          class="ng-pristine ng-untouched ng-valid ng-empty"> 选项四
+                            </td>
+                        </tr><!-- end ngIf: item.type==1 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type == 2 --></tbody><!-- end ngRepeat: item in detail.content.questions -->
+                        <tbody ng-repeat="item in detail.content.questions" class="ng-scope">
+                        <tr>
+                            <td colspan="4" class="ng-binding"><label
+                                    class="glyphicon glyphicon-list-alt btn btn-default">第5题</label>文本题
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="suv_title ng-binding">题目：问题4</td>
+                        </tr>
+                        <tr></tr><!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type == 2 -->
+                        <tr ng-if="item.type == 2" class="ng-scope">
+                            <td><textarea ng-model="item.votes" value="$index" name="4_2_option"
+                                          class="ng-pristine ng-untouched ng-valid ng-binding ng-empty"> 选项一 </textarea>
+                            </td>
+                        </tr><!-- end ngIf: item.type == 2 --></tbody>
+                        <!-- end ngRepeat: item in detail.content.questions -->
+                        <tbody ng-repeat="item in detail.content.questions" class="ng-scope">
+                        <tr>
+                            <td colspan="4" class="ng-binding"><label
+                                    class="glyphicon glyphicon-list-alt btn btn-default">第6题</label>文本题
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="suv_title ng-binding">题目：问题5</td>
+                        </tr>
+                        <tr></tr><!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type == 2 -->
+                        <tr ng-if="item.type == 2" class="ng-scope">
+                            <td><textarea ng-model="item.votes" value="$index" name="5_2_option"
+                                          class="ng-pristine ng-untouched ng-valid ng-binding ng-empty"> 选项一 </textarea>
+                            </td>
+                        </tr><!-- end ngIf: item.type == 2 --></tbody>
+                        <!-- end ngRepeat: item in detail.content.questions -->
+                        <tbody ng-repeat="item in detail.content.questions" class="ng-scope">
+                        <tr>
+                            <td colspan="4" class="ng-binding"><label
+                                    class="glyphicon glyphicon-record btn btn-default">第7题</label>单选题
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="suv_title ng-binding">题目：问题6</td>
+                        </tr>
+                        <tr></tr><!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="0" name="6_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项一
+                            </td>
+                        </tr><!-- end ngIf: item.type==0 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type==0 -->
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="1" name="6_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项二
+                            </td>
+                        </tr><!-- end ngIf: item.type==0 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type==0 -->
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="2" name="6_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项三
+                            </td>
+                        </tr><!-- end ngIf: item.type==0 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type==0 -->
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="3" name="6_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项四
+                            </td>
+                        </tr><!-- end ngIf: item.type==0 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type == 2 --></tbody>
+                        <!-- end ngRepeat: item in detail.content.questions -->
+                        <tbody ng-repeat="item in detail.content.questions" class="ng-scope">
+                        <tr>
+                            <td colspan="4" class="ng-binding"><label
+                                    class="glyphicon glyphicon-list-alt btn btn-default">第8题</label>文本题
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="suv_title ng-binding">题目：问题7</td>
+                        </tr>
+                        <tr></tr><!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type == 2 -->
+                        <tr ng-if="item.type == 2" class="ng-scope">
+                            <td><textarea ng-model="item.votes" value="$index" name="7_2_option"
+                                          class="ng-pristine ng-untouched ng-valid ng-binding ng-empty"> 选项一 </textarea>
+                            </td>
+                        </tr><!-- end ngIf: item.type == 2 --></tbody>
+                        <!-- end ngRepeat: item in detail.content.questions -->
+                        <tbody ng-repeat="item in detail.content.questions" class="ng-scope">
+                        <tr>
+                            <td colspan="4" class="ng-binding"><label class="glyphicon glyphicon-check btn btn-default">第9题</label>多选题
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="suv_title ng-binding">题目：问题8</td>
+                        </tr>
+                        <tr></tr><!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==1 -->
+                        <tr ng-if="item.type==1" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="checkbox" ng-model="item.votes[$index]" value="$index"
+                                                          name="8_1_option_0"
+                                                          class="ng-pristine ng-untouched ng-valid ng-empty"> 选项一
+                            </td>
+                        </tr><!-- end ngIf: item.type==1 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type==1 -->
+                        <tr ng-if="item.type==1" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="checkbox" ng-model="item.votes[$index]" value="$index"
+                                                          name="8_1_option_1"
+                                                          class="ng-pristine ng-untouched ng-valid ng-empty"> 选项二
+                            </td>
+                        </tr><!-- end ngIf: item.type==1 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type==1 -->
+                        <tr ng-if="item.type==1" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="checkbox" ng-model="item.votes[$index]" value="$index"
+                                                          name="8_1_option_2"
+                                                          class="ng-pristine ng-untouched ng-valid ng-empty"> 选项三
+                            </td>
+                        </tr><!-- end ngIf: item.type==1 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type==1 -->
+                        <tr ng-if="item.type==1" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="checkbox" ng-model="item.votes[$index]" value="$index"
+                                                          name="8_1_option_3"
+                                                          class="ng-pristine ng-untouched ng-valid ng-empty"> 选项四
+                            </td>
+                        </tr><!-- end ngIf: item.type==1 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type == 2 --></tbody><!-- end ngRepeat: item in detail.content.questions -->
+                        <tbody ng-repeat="item in detail.content.questions" class="ng-scope">
+                        <tr>
+                            <td colspan="4" class="ng-binding"><label
+                                    class="glyphicon glyphicon-record btn btn-default">第10题</label>单选题
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" class="suv_title ng-binding">题目：问题9</td>
+                        </tr>
+                        <tr></tr><!-- ngRepeat: i in item.content track by $index --><!-- ngIf: item.type==0 -->
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="0" name="9_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项一
+                            </td>
+                        </tr><!-- end ngIf: item.type==0 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type==0 -->
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="1" name="9_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项二
+                            </td>
+                        </tr><!-- end ngIf: item.type==0 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type==0 -->
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="2" name="9_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项三
+                            </td>
+                        </tr><!-- end ngIf: item.type==0 --><!-- end ngRepeat: i in item.content track by $index -->
+                        <!-- ngIf: item.type==0 -->
+                        <tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope">
+                            <td class="ng-binding"><input type="radio" ng-model="item.votes" value="3" name="9_0_option"
+                                                          class="ng-pristine ng-untouched ng-valid ng-not-empty"> 选项四
+                            </td>
+                        </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                <div>
+                    <input type="button" value="提交" class="btn-block check"　>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="../js/jquery-1.10.2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            type: "post",
+            url: "/lakeFarm/GetQuestion.from",
+            async: false,
+            dataType: "html",
+            success: function (msg) {
+                if(msg=="100"){
+                    alert("网络异常");
+                }else {
+//                    alert(msg);
+                    var list=msg.split("@$%");
+                    var size=list.length-1;
+                    var result="";
+                    for(var i=0;i<size;i++){
+                        var single=list[i].split("@%");
+                        var selection=single[2].split("#$%");
+                        result+=' <tbody ng-repeat="item in detail.content.questions" class="ng-scope">' +
+                                ' <tr> <td colspan="4" class="ng-binding"><labelclass="glyphicon glyphicon-record btn btn-default">第'+(i+1)+'题</label>单选题 </td> </tr>' +
+                                ' <tr> <td colspan="4" class="suv_title ng-binding" id="'+single[0]+'">题目：'+single[1]+'</td> </tr> ' +
+                                '<tr></tr> ' +
+                                '<tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope"> <td class="ng-binding"><input type="radio" name='+single[0]+' ng-model="item.votes" value="0" class="ng-pristine ng-untouched ng-valid ng-not-empty"/> '+selection[0]+' </td> </tr> ' +
+                                '<tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope"> <td class="ng-binding"><input type="radio" name='+single[0]+' ng-model="item.votes" value="1" class="ng-pristine ng-untouched ng-valid ng-not-empty"/> '+selection[1]+' </td> </tr> ' +
+                                '<tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope"> <td class="ng-binding"><input type="radio" name='+single[0]+' ng-model="item.votes" value="2" class="ng-pristine ng-untouched ng-valid ng-not-empty"/> '+selection[2]+' </td> </tr> ' +
+                                '<tr ng-if="item.type==0" ng-repeat="i in item.content track by $index" class="ng-scope"> <td class="ng-binding"><input type="radio" name='+single[0]+' ng-model="item.votes" value="3" class="ng-pristine ng-untouched ng-valid ng-not-empty"/> '+selection[3]+' </td> </tr> </tbody>'
+
+                    }
+                    $("table").html(result);
+
+                }
+
+            }
+        })
+        var tbodyList=$("table tbody");
+        var size=tbodyList.length;
+
+        for (var i=0;i<size;i++){
+            $(tbodyList).eq(i).find("input").click(function () {
+//                alert(size);
+                $(this).attr("index","true");
+                $($(this).parent().parent().siblings().eq(3).find("td input")[0]).removeAttr("index");
+                $($(this).parent().parent().siblings().eq(4).find("td input")[0]).removeAttr("index");
+                $($(this).parent().parent().siblings().eq(5).find("td input")[0]).removeAttr("index");
+            });
+        }
+//
+//        $("table tbody input[type='radio']").click(function () {
+//
+//        });
+    });
+
+
+    $(".check").click(function () {
+        var Result="";
+        var count=$("table tbody").length;
+        for(var i=0;i<count;i++)
+        {
+            var id=$("table tbody:eq("+i+")").children().eq(1).children().attr("id");
+            var correctSelection="";
+            var Selectionone=$($("table tbody:eq("+i+")").children().eq(3).find("td input")[0]).attr("index");
+            var Selectiontwo=$($("table tbody:eq("+i+")").children().eq(4).find("td input")[0]).attr("index");
+            var Selectionthree=$($("table tbody:eq("+i+")").children().eq(5).find("td input")[0]).attr("index");
+            var Selectionfour=$($("table tbody:eq("+i+")").children().eq(6).find("td input")[0]).attr("index");
+            if (Selectionone=="true"){
+                correctSelection=$($("table tbody:eq("+i+")").children().eq(3).find("td")[0]).html().split(">")[1].trim().substring(0,1);
+            }
+            else if(Selectiontwo=="true"){
+                correctSelection=$($("table tbody:eq("+i+")").children().eq(4).find("td")[0]).html().split(">")[1].trim().substring(0,1);
+            }
+            else if(Selectionthree=="true"){
+                correctSelection=$($("table tbody:eq("+i+")").children().eq(5).find("td")[0]).html().split(">")[1].trim().substring(0,1);
+            }
+            else if(Selectionfour=="true"){
+                correctSelection=$($("table tbody:eq("+i+")").children().eq(6).find("td")[0]).html().split(">")[1].trim().substring(0,1);
+            }
+            Result+=""+id.trim()+":"+correctSelection.trim()+"|";
+
+        }
+        $.ajax({
+            type: "post",
+            url: "/lakeFarm/CheckAnswer.from?check="+Result.trim()+"",
+            data: {check:Result},
+            dataType: "html",
+            success: function (msg) {
+                if (msg == "100") {
+                    alert("网络异常");
+                }
+                else {
+                    var result=msg.split("#$%");
+                    alert("您此次答对"+result[0]+"道题，答错"+result[1]+"道题！");
+                    window.location.href="../mainFarm.html";
+                }
+            }
+    })
+    })
+</script>
+
+
+</body>
+</html>

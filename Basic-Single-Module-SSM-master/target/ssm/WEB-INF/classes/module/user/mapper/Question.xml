@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lakefarm.mapper.QuestionMapper">
+    <resultMap id="getQuestion" type="com.lakefarm.pojo.Question">
+        <id column="question_id" property="question_id"/>
+        <result property="question_title" column="question_title"/>
+        <result property="question_type" column="question_type"/>
+        <result property="question_selection" column="question_selection"/>
+        <result property="question_answer" column="question_answer"/>
+    </resultMap>
+
+    <!--增加问题-->
+    <insert id="addQuestion" parameterType="com.lakefarm.pojo.Question">
+        insert into question values
+        (#{question_id},#{question_title},#{question_type},#{question_selection},#{question_answer});
+    </insert>
+
+    <!--删除问题-->
+    <delete id="deleteQuestion" parameterType="String">
+        delete from question where question_id=#{question_id};
+    </delete>
+
+    <!--更新问题-->
+    <update id="updateQuestion" parameterType="com.lakefarm.pojo.Question">
+        UPDATE question
+        <trim prefix="set" suffixOverrides=",">
+            <if test="question_title!=null">question_title=#{question_title},</if>
+            <if test="question_type!=null">question_type=#{question_type},</if>
+            <if test="question_selection!=null">question_selection=#{question_selection},</if>
+            <if test="question_answer!=null">question_answer=#{question_answer},</if>
+        </trim>
+        WHERE question_id=#{question_id}
+    </update>
+
+    <!--通过类型获取该类型全部问题-->
+    <select id="getQuestionByQuestionType" parameterType="String" resultMap="getQuestion">
+        select question_id,question_title,question_type,question_selection,question_answer from question where question_type=#{question_type}
+    </select>
+
+    <!--通过id获取指定问题-->
+    <select id="getQuestionById" parameterType="String" resultMap="getQuestion">
+        select question_id,question_title,question_type,question_selection,question_answer from question where question_id=#{question_id}
+    </select>
+    <!--随机获取问题-->
+    <!--这个语句效率较低　后期需要跟进　　目前暂时实现-->
+    <select id="getRandomQuestionById" parameterType="String" resultMap="getQuestion">
+        select question_id,question_title,question_type,question_selection,question_answer from question order by rand() limit 10
+    </select>
+
+    <select id="getAllQuestion" parameterType="String" resultMap="getQuestion">
+        select question_id,question_title,question_type,question_selection,question_answer from question
+    </select>
+</mapper>

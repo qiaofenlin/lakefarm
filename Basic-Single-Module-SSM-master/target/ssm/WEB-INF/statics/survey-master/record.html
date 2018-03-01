@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Record-Grade</title>
+</head>
+<script src="../js/jquery-1.10.2.min.js"></script>
+<body>
+    <table width="400" border="1" cellspacing="0" cellpadding="0">
+        <tbody id="res">
+        <tr>
+            <td>record_id</td>
+            <td>username</td>
+            <td>question_type</td>
+            <td>score</td>
+            <td>Record_time</td>
+        </tr>
+        </tbody>
+    </table>
+</body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            type: "post",
+            url: "/lakeFarm/GetUserRecord.from",
+            dataType: "html",
+            success: function (msg) {
+                if (msg == "100") {
+                    alert("网络异常");
+                }
+                else {
+                    var res=" <tr> <td>record_id</td> <td>username</td> <td>question_type</td> <td>score</td> <td>Record_time</td> </tr>";
+                    var list=msg.split("#&");
+                    var listSize=list.length-1;
+                    for(var i=0;i<listSize;i++){
+                        res+=" <tr> <td>"+list[i].split("#$")[0]+"</td> <td>"+list[i].split("#$")[4]+"</td> <td>"+list[i].split("#$")[3]+"</td> <td>"+list[i].split("#$")[2]+"</td> <td>"+list[i].split("#$")[1]+"</td> </tr>";
+                    }
+                    $("#res").html(res);
+                }
+            }
+        })
+    });
+</script>
+</html>

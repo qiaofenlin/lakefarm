@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lakefarm.mapper.PersonQuestionMapper">
+    <resultMap id="getPersonQuestion" type="com.lakefarm.pojo.PersonQuestion">
+        <id column="uq_id" property="uq_id"/>
+        <result property="question_id" column="question_id"/>
+        <result property="u_id" column="u_id"/>
+        <result property="question_status" column="question_status"/>
+    </resultMap>
+
+    <!--增加个人测试结果-->
+    <insert id="addPersonQuestion" parameterType="com.lakefarm.pojo.PersonQuestion">
+        insert into person_question values
+        (#{uq_id},#{question_id},#{u_id},#{question_status});
+    </insert>
+
+    <!--删除个人测试结果-->
+    <delete id="deletePersonQuestion" parameterType="String">
+        delete from person_question where uq_id=#{uq_id};
+    </delete>
+
+    <!--更新个人测试结果-->
+    <update id="updatePersonQuestion" parameterType="com.lakefarm.pojo.PersonQuestion">
+        UPDATE person_question
+        <trim prefix="set" suffixOverrides=",">
+            <if test="question_id!=null">question_id=#{question_id},</if>
+            <if test="u_id!=null">u_id=#{u_id},</if>
+            <if test="question_status!=null">question_status=#{question_status},</if>
+        </trim>
+        WHERE uq_id=#{uq_id}
+    </update>
+
+    <!--通过id获取指定个人测试结果-->
+    <select id="getPersonQuestionById" parameterType="String" resultMap="getPersonQuestion">
+        select uq_id,question_id,u_id,question_status from question where question_id=#{question_id} AND u_id=#{u_id}
+    </select>
+</mapper>

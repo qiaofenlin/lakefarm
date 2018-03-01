@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../js/jquery-1.10.2.min.js"></script>
+</head>
+<body>
+<input type="button" id="ziliao" value="资料库" onclick="change(this.id)"/><br>
+<input type="button" id="wenjuan" value="我的问卷" onclick="change(this.id)"/><br>
+<input type="button" id="score" value="我的成绩" onclick="change(this.id)"/><br>
+</body>
+<script type="text/javascript">
+        function change (v) {
+            if(v=="wenjuan"){
+                window.location.href="./questionTest.html";
+            }
+            else if(v=="ziliao"){
+                window.location.href="./QuestionSource.html";
+            }
+            else if(v=="score"){
+                window.location.href="./record.html";
+            }
+        }
+</script>
+</html>

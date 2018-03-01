@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>战斗</title>
+
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        .fr{float:right;}
+        .fl{float:left;}
+        body {
+            background: url(battle/bg.jpg) no-repeat;
+            background-size: cover;
+        }
+
+
+        .bloodRow {
+            margin: 3% auto;
+            width: 90%;
+            overflow: hidden;
+            height: 36px;
+        }
+
+        .bloodLeft ,.areaLeft{
+            float: left;
+            width: 40%;
+
+        }
+
+        .bloodRight,.areaRight {
+            float: right;
+            width: 40%;
+        }
+
+        .perImg {
+            width: 36px;
+            height: 100%;
+            box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .perImg img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .progress {
+            width: 300px;
+            padding: 4px;
+            margin-top:10px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 6px;
+            -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .bloodProgress {
+            position: relative;
+            height: 16px;
+            border-radius: 4px;
+            -webkit-transition: 0.4s linear;
+            -moz-transition: 0.4s linear;
+            -o-transition: 0.4s linear;
+            transition: 0.4s linear;
+            -webkit-transition-property: width, background-color;
+            -moz-transition-property: width, background-color;
+            -o-transition-property: width, background-color;
+            transition-property: width, background-color;
+            -webkit-box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.25), inset 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .bloodProgressBar {
+
+            background-color: #f27011;
+        }
+
+        .bloodProgressBar:before, .bloodProgressBar:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .bloodProgressBar:before {
+            bottom: 0;
+            background: url(battle/stripes.png) 0 0 repeat;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .bloodProgressBar:after {
+            z-index: 2;
+            bottom: 45%;
+            border-radius: 4px;
+            background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05));
+            background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05));
+            background-image: -o-linear-gradient(top, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05));
+            background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05));
+        }
+
+        .bloodProgressBarLeft {
+            width: 25%;
+        }
+
+        .bloodProgressBarRight {
+            float:right;
+            width: 35%;
+        }
+        .battleArea{position:relative;width:100%;overflow:hidden;}
+        .counter{margin:2px auto;font-family: Monaco;text-align:center;color: rgba(255, 215, 32, 0.89);font-size:20px;}
+        .skills{position:absolute;bottom:120px;}
+        .skills ul{position:relative}
+        .skills ul li{position:absolute;}
+        .skills ul li a{display:block;width:50px;height:50px;border-radius: 50%;overflow:hidden;}
+        .skills ul li a img{width:100%;height:100%;}
+        .skills ul li:nth-child(1){top:0px;left:60px;}
+        .skills ul li:nth-child(2){top:35px;left:100px;}
+        .skills ul li:nth-child(3){top:70px;left:60px;}
+        .skills ul li:nth-child(4){top:35px;left:20px;}
+         .areaLeft,.areaRight{height:100%;position: relative;}
+        .person{width:320px;height:500px;margin:0 50px;}
+        .person img{width:100%;height:100%;}
+        .skillsRight{right:160px;}
+         .start{color:#ffffff;text-decoration: none;font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;}
+ 
+         .person img{position: relative;}
+         .person .ani{ animation:personAni 0.8s  infinite linear alternate;}
+         @-webkit-keyframes personAni{
+         	0%{
+         		top:-2px;
+         	}
+         	25%{
+         		top: -1px;
+         	}
+         	50%{
+         		top: 0px;
+         	}
+         	75%{
+         		top: 10px;
+         	}
+         	100%{
+         		top: 20px;
+         	}
+         }
+         @-moz-keyframes personAni{
+         	0%{
+         		top:-5px;
+         	}
+         	25%{
+         		top: -2px;
+         	}
+         	50%{
+         		top: 0px;
+         	}
+         	75%{
+         		top: 25px;
+         	}
+         	100%{
+         		top: 50px;
+         	}
+         }
+         
+    </style>
+
+</head>
+<body>
+<div class="bloodRow">
+    <div class="bloodLeft ">
+        <div class="perImg fl"><img src="battle/per1.jpg"/></div>
+        <div class="progress fl">
+            <div class="bloodProgress bloodProgressBar bloodProgressBarLeft"></div>
+            <div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bloodRight">
+            <div class="perImg fr"><img src="battle/per2.jpg"/>
+            </div>
+            <div class="progress fr">
+                <div class="bloodProgress bloodProgressBar bloodProgressBarRight"></div>
+            </div>
+        </div>
+
+</div>
+<div class="counter" id="counter"><a href="javascript:void(0);" class="start" onclick="countTime()">开始</a></div>
+
+<div class="battleArea">
+    <div class="areaLeft">
+
+        <div class="skills fl">
+            <ul>
+                <li  class="skill2"><a><img src="battle/skill1.png"/></a></li>
+                <li class="skill2"><a><img  src="battle/skill2.png"/></a></li>
+                <li class="skill2"><a><img  src="battle/skill3.png"/></a></li>
+                <li class="skill2"> <a><img src="battle/skill4.png"/></a></li>
+            </ul> 
+        </div>
+        <div class="person fl"><img id="battlePer2" src="battle/battlePer2.png"/></div>
+</div>
+    <div class="areaRight">
+
+        <div class="skills skillsRight fr">
+            <ul>
+                <li class="skill1"><a><img src="battle/skill1.png"/></a></li>
+                <li class="skill1"><a><img  src="battle/skill2.png"/></a></li>
+                <li class="skill1"><a><img src="battle/skill3.png"/></a></li>
+                <li class="skill1"><a><img src="battle/skill4.png"/></a></li>
+            </ul>
+        </div>
+        <div class="person fr"><img id="battlePer1" src="battle/battlePer1.png"/></div>
+
+    </div>
+</div>
+    <script src="js/jquery.min.js"></script>
+    <!--<script src="js/jquery.countdown.min.js"></script>-->
+
+ <script type="text/javascript">
+        var time = 60;
+        var flag=false;//控制战斗的开始
+        var timer;
+        function countTime() {
+        	flag=true;
+            if (time == -1) {
+                alert("战斗over");
+                flag=false;
+                return;
+            }
+            document.getElementById("counter").innerHTML = "剩余时间：" + time + "秒";
+            time = time - 1;
+            timer=setTimeout('countTime()', 1000);
+            
+        }
+        
+        var $battlePer1=$('#battlePer1');//右边人物
+        var $battlePer2=$('#battlePer2');//左边人物  
+        var distance=$battlePer1.offset().left-$battlePer2.offset().left;//人物之间的距离
+        var alertF=true;//控制游戏结束时的弹窗
+        //开场时人物移动
+    	function personMove(){
+    		$battlePer2.animate({
+        		height:'80%',
+        		left:'240px',
+        		top:'170px'
+    		},function(){
+    			$battlePer2.addClass('ani');//人物上下跳动
+    		});
+    		
+    		distance=$battlePer1.offset().left-$battlePer2.offset().left;		
+
+    		$battlePer1.animate({
+        		height:'80%',
+        		left:'-240px',
+        		top:'170px'
+    		},function(){
+    			$battlePer1.addClass('ani');//人物上下跳动
+    		});
+    		distance=$battlePer1.offset().left-$battlePer2.offset().left;
+    	}
+       	setTimeout(personMove(),1000);//人物移动定时器       
+       	
+     	//使用面向对象方法控制人物使用技能
+     	//参数：技能，力度，技能特效的起始高度，技能特效的起始位置，技能特效的结束位置，敌人，血槽。
+        function Skill(skill,deg,top,leftS,leftE,enemy,progress){
+        	this.skill=skill;
+        	this.deg=deg;
+        	this.top=top;
+        	this.leftS=leftS;
+        	this.leftE=leftE;
+        	this.enemy=enemy;
+        	this.progress=progress;
+        	this.create();	//创建技能
+        }
+        //创建技能
+        Skill.prototype.create=function(){
+        	this.ele=$('<img>');
+        	this.ele.attr('src',this.skill);
+        	this.ele.css({
+        		position:"absolute",
+				top:this.top,
+				left:this.leftS+"px"
+        	});
+        	$('body').append(this.ele);
+        	this.move();//使用技能
+        }
+        //使用技能
+        Skill.prototype.move=function(){
+        	var that=this;
+        	this.ele.animate({
+        		left:this.leftE+"px"
+        	},function(){
+        		var $progress_w=that.progress.width();//人物血槽
+        		var battlePer1_w,bullet_w;
+        		battlePer1_w=that.enemy.offset().left;
+				bullet_w=that.ele.offset().left+that.ele.width();
+        		window.onresize=function(){
+        			battlePer1_w=that.enemy.offset().left;
+        			bullet_w=that.ele.offset().left+that.ele.width();
+        		}
+        		var step=1,ProWidthR=$progress_w;//控制血槽量
+        		
+				//当技能接触到敌人，技能消失，并且敌人的血槽逐渐减少
+				if(bullet_w>battlePer1_w){
+					that.ele.stop();
+					that.ele.hide();//技能消失
+					step++;
+					ProWidthR=ProWidthR-step*that.deg;//血槽量减少
+					//当敌人的血槽为空，游戏结束
+					if(ProWidthR<=0){
+						clearTimeout(timer);
+						that.ele.stop();
+						that.ele.hide();
+						ProWidthR==0;
+						if(alertF){
+							alert("GAME OVER!");//游戏结束
+							alertF=false;
+							window.location.reload();//页面刷新
+						}
+					};
+					//敌人的血槽量
+					that.progress.css("width",ProWidthR);
+					//结束技能
+					that.ele.stop();					
+				}
+        	})
+        }
+        
+        //技能特效
+        var skillArrL=["battle/skill1T.png","battle/skill2T.png","battle/skill3T_L.png","battle/skill4T_L.png"];
+        var skillArrR=["battle/skill1T.png","battle/skill2T.png","battle/skill3T_R.png","battle/skill4T_R.png"];
+        
+        //战斗，参数为我方，敌方
+        function battle(person,enemy){
+        	var skill=person.parent().siblings('.skills').find('li');
+        	skill.click(function(){
+        		//若点击了“开始”，才能使用技能
+        		if(flag){
+        			var index=$(this).index();
+        			var srcT;
+		        	var deg=index+1;//技能的力度
+		        	var leftS,leftE,progress;
+		        	var top=person.offset().top+100;
+		        	if(person==$battlePer1){
+		        		srcT=skillArrL[index];//获取某种技能
+		        		leftS=$battlePer1.offset().left;//右边人物技能的起始位置
+		        		leftE=$battlePer2.offset().left+$battlePer2.width()-100;//右边人物技能的结束位置
+		        		progress=$('.bloodProgressBarLeft');//左边血槽
+		        	}else{
+		        		srcT=skillArrR[index];//获取某种技能
+		        		leftS=person.offset().left+person.width();//左边人物技能的起始位置
+		        		leftE=distance-100;//左边人物技能的结束位置
+		        		progress=$('.bloodProgressBarRight');//左边血槽
+		        	}
+		        	var skill2=new Skill(srcT,deg,top,leftS,leftE,enemy,progress);//使用技能
+        		}
+        		//若未点击“开始”，给出提示
+        		else alert('请点击"开始"按钮');
+        	})
+        }
+        battle($battlePer2,$battlePer1);//左边人物攻击右边人物
+        battle($battlePer1,$battlePer2);//右边人物攻击左边人物
+        
+    </script>
+
+</body>
+</html>

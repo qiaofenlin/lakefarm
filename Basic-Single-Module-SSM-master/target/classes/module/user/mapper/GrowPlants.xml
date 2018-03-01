@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lakefarm.mapper.GrowPlantsMapper">
+    <resultMap id="getGrow" type="com.lakefarm.pojo.GrowPlants">
+        <id column="zz_id" property="zz_id"/>
+        <result property="zz_type" column="zz_type"/>
+        <result property="zz_name" column="zz_name"/>
+        <result property="zz_growntime" column="zz_growntime"/>
+        <result property="zz_price" column="zz_price"/>
+        <result property="zz_description" column="zz_description"/>
+        <result property="zz_minplantcount" column="zz_minplantcount"/>
+        <result property="zz_sicktype" column="zz_sicktype"/>
+        <result property="zz_icon" column="zz_icon"/>
+        <result property="zz_production" column="zz_production"/>
+        <result property="zz_singlehfuse" column="zz_singlehfuse"/>
+    </resultMap>
+
+    <!--增加种植物-->
+    <insert id="addGrow" parameterType="com.lakefarm.pojo.GrowPlants">
+        insert into grow_plants values
+        (#{zz_id},#{zz_type},#{zz_name},#{zz_growntime},
+        #{zz_price},#{zz_description},#{zz_minplantcount},#{zz_sicktype},#{zz_icon},#{zz_production},#{zz_singlehfuse});
+    </insert>
+
+    <!--删除种植物-->
+    <delete id="deleteGrow" parameterType="String">
+        delete from grow_plants where zz_id=#{zz_id};
+    </delete>
+
+    <!--更新种植物-->
+    <update id="updateGrow" parameterType="com.lakefarm.pojo.GrowPlants">
+        update grow_plants
+        <set>
+            <if test="zz_name!=null and zz_name!='' ">
+                zz_name=#{zz_name},
+            </if>
+            <if test="zz_type!=null and zz_type!='' ">
+                zz_type=#{zz_type},
+            </if>
+            <if test="zz_growntime!=null and zz_growntime!='' ">
+                zz_growntime=#{zz_growntime},
+            </if>
+            <if test="zz_price!=null and zz_price!='' ">
+                zz_price=#{zz_price},
+            </if>
+            <if test="zz_description!=null and zz_description!='' ">
+                zz_description=#{zz_description},
+            </if>
+            <if test="zz_minplantcount!=null and zz_minplantcount!='' ">
+                zz_minplantcount=#{zz_minplantcount},
+            </if>
+            <if test="zz_sicktype!=null and zz_sicktype!='' ">
+                zz_sicktype=#{zz_sicktype},
+            </if>
+            <if test="zz_icon!=null and zz_icon!='' ">
+                zz_icon=#{zz_icon},
+            </if>
+            <if test="zz_production!=null and zz_production!='' ">
+                zz_production=#{zz_production},
+            </if>
+            <if test="zz_singlehfuse!=null and zz_singlehfuse!='' ">
+                zz_singlehfuse=#{zz_singlehfuse},
+            </if>
+            where zz_id=#{zz_id};
+        </set>
+    </update>
+
+
+    <!--通过id获取指定种植物-->
+    <select id="getGrowById" parameterType="String" resultMap="getGrow">
+        select zz_singlehfuse,zz_production,zz_icon,zz_sicktype,zz_minplantcount
+        ,zz_description,zz_price,zz_growntime,zz_type,zz_name,zz_id from grow_plants where zz_id=#{zz_id}
+    </select>
+</mapper>

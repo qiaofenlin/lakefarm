@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name ="viewport" content ="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <title>HTML5游戏雏形</title>
+    <style>
+        #canvas {
+            background-color: #C0C0C0;
+            /*#009a61;#d2994f;*/
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+</body>
+<script>
+    /*
+     * 获取屏幕大小并整取
+     * */
+    var phoneWidth =  parseInt(window.screen.width);
+    var phoneheight =  parseInt(window.screen.height);
+    var level = Number(sessionStorage.level) || 1;
+    var intervalID;
+    function getCanvasWH(w ,h) {
+        var strw = String(w);
+        var strh = String(h);
+        var canvasW = strw.substring(0, strh.length-1) +'0';
+        var canvasH = strh.substring(0, strw.length-1)+'0';
+        return {
+            w: Number(canvasW),
+            h: Number(canvasH),
+            text: {
+                x: Number(canvasW) - 120,
+                y: 30,
+                width: 120
+            }
+        };
+    }
+    var canvasWh = getCanvasWH(phoneWidth, phoneheight);
+    console.log('WH', canvasWh);
+
+    /*
+     * 随机生成敌人坐标
+     * */
+    function genEnemy(width) {
+        var nums = 1+ Math.random()*2;
+        var enemys = [];
+        console.log(Maps, Maps.length, Maps[0].length);
+        for(var i=0;i<nums;i++){
+            var vector  = {
+                row: parseInt(Maps.length*Math.random()),
+                col: parseInt(Maps[0].length*Math.random())
+            }
+            console.log(vector);
+            if(enemys.indexOf(vector)>0 || Maps[vector.row][vector.col].val == 1 || vector.row == 1 || vector.row == 0){
+                i-- ;
+            }else{
+                enemys.push(vector);
+            }
+        }
+        return enemys.map(function (item) {//只能变一个x或者y对比前后参数,递归步数
+            return {
+                x: item.col*width*2 + width,
+                y: item.row*width*2 + width
+            }
+        });
+
+    }
+    /*
+     * 设置地图并映射障碍物坐标
+     * 实现A* 寻路算法
+     * */
+    var Maps = [];
+    function getVector(obj, step){//获取坐标地图映射(row, col)
+        var t = {};
+        t.col = Math.floor(obj.x/(step));//需要重设点击目标坐标
+        t.row = Math.floor(obj.y/(step));
+        return t;
+    }
+    function setMaps(step) {//初始化地图
+        Maps = [];
+        var col = canvasWh.w/step;
+        var row = canvasWh.h/step;
+        for(var i=0;i<row;i++){
+            Maps[i] = [];
+            for(var j=0;j<col;j++){
+                var obj = {
+                    val: 0,
+                    row:i,
+                    col:j
+                };
+                Maps[i][j] = obj;
+            }
+        }
+    }
+    //对象数组设置障碍点
+    function setMapblock(stones, len, step , eaer) {
+        var val = 1;
+        if(eaer == 0){
+            val = 0;
+        }
+        for(var i=0;i<len;i++){
+            var row_start = stones[i].y/step;//计算出第几行
+            var col_start = stones[i].x/step;//计算出第几列
+            var row_end = stones[i].height/step + row_start;//截止行
+            var col_end = stones[i].width/step + col_start;//截止列
+            for(var j=row_start;j<row_end;j++){
+                for(var p=col_start;p<col_end;p++){
+                    if(Maps[j] && Maps[j][p]){//超出地图部分不设置
+                        Maps[j][p].val = val;
+                    }
+
+                }
+            }
+        }
+    }
+    //单个对象设置障碍点
+    function setMapSin(obj, step){
+        var t = getVector(obj, step);
+        Maps[t.row][t.col].val = 1;
+    }
+    //根据敌人位置设置射击方向
+    function shotDirect(role, enemy) {
+        var direction = 'down';
+        if(role.col && role.col>enemy.col){//在角色的左边
+            if(role.row>enemy.row){
+                var dir = ['left', 'up', 'up'];
+                direction = dir[parseInt(Math.random()*2)];//随机发射 左边，上面
+            }else if(role.row == enemy.row){
+                direction = 'left';
+            }else{
+                var dir = ['left', 'down', 'down'];
+                direction = dir[parseInt(Math.random()*2)];//随机发射 左边，下
+            }
+        }else if(role.col && role.col<enemy.col){
+            if(role.row>enemy.row){
+                var dir = ['right', 'up', 'up'];
+                direction = dir[parseInt(Math.random()*2)];//随机发射 左边，上面
+            }else if(role.row == enemy.row){
+                direction = 'right';
+            }else{
+                var dir = ['right', 'down', 'down'];
+                direction = dir[parseInt(Math.random()*2)];//随机发射 左边，下
+            }
+        }else if(role.col = enemy.col) {
+            if(role.row>enemy.row){
+                direction = 'up';
+            }else{
+                direction = 'down';
+            }
+        }else {
+            direction = 'down';
+        }
+        return direction
+    }
+    //是否点击了敌人
+    function isClickEnemy(target, objs, role) {
+        var step = role.r*2;
+        var t = getVector(target, step);
+        var isclickenemy = false;
+        objs.forEach(function(item){
+            if(item instanceof Enemy){
+                var enemy = getVector(item, step);
+                if(t.col == enemy.col && t.row == enemy.row){
+                    role.direction = shotDirect(role, enemy);
+                    isclickenemy = true;
+                }
+            }
+        });
+        return isclickenemy;
+    }
+    // 获取四周点
+    function getRounds(points, current) {// 地图
+        var u = null;//上
+        var l = null;//左
+        var d = null;//下
+        var r = null;//右
+        var rounds = [];
+        // 上
+        if (current.row - 1 >= 0) {
+            u = points[current.row - 1][current.col];
+            rounds.push(u);
+        }
+        // 左
+        if (current.col - 1 >= 0) {
+            l = points[current.row][current.col - 1];
+            rounds.push(l);
+        }
+        // 下
+        if (current.row + 1 < points.length) {
+            d = points[current.row + 1][current.col];
+            rounds.push(d);
+        }
+        // 右
+        if (current.col + 1 < points[0].length) {
+            r = points[current.row][current.col + 1];
+            rounds.push(r);
+        }
+        return rounds;
+    }
+    // 监测是否在列表中
+    function inList(list, current) {
+        for (var i = 0, len = list.length; i < len; i++) {
+            if ((current.row == list[i].row && current.col == list[i].col) || (current == list[i]))
+                return true;
+        }
+        return false;
+    }
+    // 检测是否为障碍点
+
+    function isStone(maps, targetV, role) {
+        var t = getVector(targetV, role.r*2);
+        if (maps[t.row][t.col].val == 1 ) return true;
+        return false;
+    }
+    // 检测role和target是否在同一区域
+    // 检测role 与 shots 是否发生撞击
+    function isWin(role, target) {
+        var step = role.r*2;
+        var t = getVector(target, step);
+        var r = getVector(role, step);
+        if(t.col === r.col && t.row===r.row){
+            return true;
+        }
+        return false;
+    }
+    //寻找路径（astar算法）-地图、起点、终点
+    function findway(points, start, end) {
+        var rows= Maps.length;
+        var cols = Maps[0].length;
+        var step = start.r*2;
+        var s = getVector(start, step);
+        start.col = s.col;//需要重设role坐标
+        start.row = s.row;
+        var e = getVector(end, step);
+        end.col = e.col;//需要重设end坐标
+        end.row = e.row;
+        //console.log(start, end);
+        var opens = [];  // 存放可检索的方块(开启列表)
+        var closes = [];  // 存放已检索的方块（关闭列表）
+        var cur = null;  // 当前指针
+        var bFind = true;  // 是否检索
+        // 设置开始点的F、G为0并放入opens列表（F=G+H）
+        start.F = 0;
+        start.G = 0;
+        start.H = 0;
+        // 将起点压入closes数组，并设置cur指向起始点
+        closes.push(start);
+        cur = start;
+        // 如果起始点紧邻结束点则不计算路径直接将起始点和结束点压入closes数组
+        if (Math.abs(start.row - end.row) + Math.abs(start.col - end.col) == 1) {
+            end.P = start;
+            closes.push(end);
+            bFind = false;
+            console.log('error', bFind);
+        }
+        // 计算路径
+        while (cur && bFind) {
+            //如果当前元素cur不在closes列表中，则将其压入closes列表中
+            //console.log('111111, cur', cur, bFind);
+            if (!inList(closes, cur))
+                closes.push(cur);
+            // 然后获取当前点四周点
+            var rounds = getRounds(points, cur);
+            // 当四周点不在opens数组中并且可移动，设置G、H、F和父级P，并压入opens数组
+            for (var i = 0; i < rounds.length; i++) {
+                if (rounds[i].val == 1 || inList(closes, rounds[i]) || inList(opens, rounds[i]))
+                    continue;
+                else if (!inList(opens, rounds[i]) && rounds[i].val != 1) {
+                    rounds[i].G = cur.G + 1;//不算斜的，只算横竖，设每格距离为1
+                    rounds[i].H = Math.abs(rounds[i].col - end.col) + Math.abs(rounds[i].row - end.row);
+                    rounds[i].F = rounds[i].G + rounds[i].H;
+                    rounds[i].P = cur;//cur为.P的父指针
+                    opens.push(rounds[i]);
+                }
+            }
+            // 如果获取完四周点后opens列表为空，则代表无路可走，此时退出循环
+            if (!opens.length) {
+                cur = null;
+                opens = [];
+                closes = [];
+                break;
+            }
+            // 按照F值由小到大将opens数组排序
+            opens.sort(function (a, b) {
+                return a.F - b.F;
+            });
+            // 取出opens数组中F值最小的元素，即opens数组中的第一个元素
+            var oMinF = opens[0];
+            var aMinF = [];  // 存放opens数组中F值最小的元素集合
+            // 循环opens数组，查找F值和cur的F值一样的元素，并压入aMinF数组。即找出和最小F值相同的元素有多少
+            for (var i = 0; i < opens.length; i++) {
+                if (opens[i].F == oMinF.F)
+                    aMinF.push(opens[i]);
+            }
+            // 如果最小F值有多个元素
+            if (aMinF.length > 1) {
+                // 计算元素与cur的曼哈顿距离
+                for (var i = 0; i < aMinF.length; i++) {
+                    aMinF[i].D = Math.abs(aMinF[i].row - cur.row) + Math.abs(aMinF[i].col - cur.col);
+                }
+                // 将aMinF按照D曼哈顿距离由小到大排序（按照数值的大小对数字进行排序）
+                aMinF.sort(function (a, b) {
+                    return a.D - b.D;
+                });
+                oMinF = aMinF[0];
+            }
+            // 将cur指向D值最小的元素
+            cur = oMinF;
+            // 将cur压入closes数组
+            if (!inList(closes, cur))
+                closes.push(cur);
+            // 将cur从opens数组中删除
+            for (var i = 0; i < opens.length; i++) {
+                if (opens[i] == cur) {
+                    opens.splice(i, 1);//将第i个值删除
+                    break;
+                }
+            }
+            // 找到最后一点，并将结束点压入closes数组
+            if (cur.H == 1) {
+                end.P = cur;
+                closes.push(end);
+                cur = null;
+            }
+        }
+        if (closes.length) {
+            // 从结尾开始往前找
+            var dotCur = closes[closes.length - 1];
+            var path = [];  // 存放最终路径
+            var i=0;
+            while (dotCur) {
+                path.unshift(dotCur);  // 将当前点压入path数组的头部
+                dotCur = dotCur.P;  // 设置当前点指向父级
+                if (!dotCur.P) {
+                    dotCur = null;
+                }
+            }
+            return path;
+        }
+        else {
+            return false;
+        }
+    }
+    /*
+     * 根据速度映射路径
+     * */
+    function getPathPx(role, path) {
+
+        var pxPaths = [];
+        var paths = path.map(function (item) {//只能变一个x或者y对比前后参数,递归步数
+            return {
+                x: item.col*role.r*2 + role.r,
+                y: item.row*role.r*2 + role.r
+            }
+        });
+        var cur = {
+            x: role.x,
+            y: role.y
+        };
+        //从当前点移到下一个点需要 steps 步数
+        function getSteps(cur, next) {
+            var steps = role.r*2/role.speed;//移动一个空格需要多少步数
+            var speed = role.speed;
+            var path = [];
+            if(cur.x>next.x){//对比 x
+                for(var i=0;i<steps;i++){
+                    var obj = {
+                        x: cur.x - speed*(i+1),
+                        y: cur.y,
+                        direction: 'left'
+                    };
+                    path.push(obj);
+                }
+            }else if(cur.x<next.x){
+                for(var i=0;i<steps;i++){
+                    var obj = {
+                        x: cur.x + speed*(i+1),
+                        y: cur.y,
+                        direction: 'right'
+                    };
+                    path.push(obj);
+                }
+            }
+            if(cur.y>next.y){
+                for(var i=0;i<steps;i++){
+                    var obj = {
+                        x: cur.x,
+                        y: cur.y-speed*(i+1),
+                        direction: 'up'
+                    };
+                    path.push(obj);
+                }
+            }else if(cur.y<next.y){
+                for(var i=0;i<steps;i++){
+                    var obj = {
+                        x: cur.x,
+                        y: cur.y + speed*(i+1),
+                        direction: 'down'
+                    };
+                    path.push(obj);
+                }
+            }
+            //console.log(path);
+            return path;
+
+        }
+        paths.forEach(function (item) {
+            //
+            pxPaths = pxPaths.concat(getSteps(cur, item));
+            cur = item;
+        });
+        return pxPaths;
+
+    }
+
+    /*
+     * 生成墙壁
+     * 障碍物
+     * 板擦
+     * 敌人
+     * 角色
+     * 以及目标等对象
+     * */
+    var Wall = function(x, y, width, height) {//绘制墙面
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    };
+
+    var keysDown = [];
+    var speed = 5;
+    Wall.prototype = {
+        draw: function(context){
+            context.beginPath();
+            context.moveTo(this.x, this.y);
+            context.lineTo(this.x + this.width, this.y);
+            context.lineTo(this.x+this.width, this.y+this.height);
+            context.lineTo(this.x, this.y + this.height);
+            context.stroke();
+        }
+    };
+
+    var Sprite = function(x, y, r, style) {//角色精灵
+        this.x = x;
+        this.y = y;
+        this.speed = 10;//速度
+        this.r = r;
+        this.width = r;
+        this.height =r;
+        this.style = style;
+        this.direction = 'down';
+        this.vector;
+    };
+    Sprite.prototype = {
+        move: function() {//更新坐标
+            if(keysDown[0] instanceof Object){
+                //console.log('==鼠标点击操作====');
+
+                this.x = keysDown[0].x;
+                this.y = keysDown[0].y;
+                this.direction = keysDown[0].direction;
+                //console.log(this.x , this.y);
+            }else{
+                if (keysDown.indexOf(38)>-1 || keysDown.indexOf(87)>-1) { // Player holding up
+                    this.y -= this.speed;
+                    this.direction = 'up';
+                }
+                if (keysDown.indexOf(40)>-1|| keysDown.indexOf(68)>-1) { // Player holding down
+                    this.y += this.speed;
+                    this.direction = 'down';
+                }
+                if (keysDown.indexOf(37)>-1 || keysDown.indexOf(83)>-1) { // Player holding left
+                    this.x -= this.speed;
+                    this.direction = 'left';
+                }
+                if (keysDown.indexOf(39)> -1 || keysDown.indexOf(65) >-1) { // Player holding right
+                    this.x += this.speed;
+                    this.direction = 'right';
+                }
+
+            }
+
+
+            keysDown = [];
+        },
+        draw: function(context, isCollide) {//绘圆形
+            var _this = this;
+            //_this.move();
+            if(!isCollide){//没有碰撞下移动并保存状态
+                _this.vector = {//保存上一步位置以便碰撞后恢复
+                    x: _this.x,
+                    y: _this.y
+                };
+                //console.log('上一步坐标',_this.vector);
+                _this.move();//这边要检测碰撞
+                //console.log('下一步坐标',_this.x,this.y);
+            }else{//有碰撞则回退上一步
+                _this.x = _this.vector.x;
+                _this.y = _this.vector.y;
+            }
+
+            context.beginPath();
+            context.fillStyle = this.style;
+            context.arc(this.x, this.y, this.r, 0, 2*Math.PI);
+            context.fill();
+            return {
+                x: _this.x,
+                y: _this.y,
+                r: _this.r,
+                direction: _this.direction
+            };
+        }
+    };
+
+    var Target = function(x, y, width, height, style) {//目标
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.style = style;
+    };
+    Target.prototype = {
+        draw: function(context) {//绘矩形
+            context.beginPath();
+            context.fillStyle = this.style;
+            context.fillRect(this.x, this.y, this.width, this.height);
+        }
+    };
+
+    var Stone = function(x, y, width, height, style){//障碍物
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.style = style;
+    };
+    Stone.prototype = {
+        draw: function(context){
+            context.fillStyle = this.style;
+            context.fillRect(this.x, this.y, this.width, this.height);
+        }
+    };
+    var Enemy =  function(x, y, r, id, style) {//敌人
+        this.x = x;
+        this.y = y;
+        this.speed = 15;
+        this.r = r;
+        this.maxShotNum = 2;
+        this.shotNum = 0;
+        this.width = r;
+        this.height =r;
+        this.id = 'enemy' + id;
+        this.style = style;
+    };
+    Enemy.prototype = {
+        draw: function(context) {//绘圆形
+            context.beginPath();
+            context.fillStyle = this.style;
+            context.arc(this.x, this.y, this.r, 0, 2*Math.PI);
+            context.fill();
+        }
+    };
+
+    var Shot =  function(x, y, r, id, dir, style) {//子弹
+        this.x = x;
+        this.y = y;
+        this.speed = 30;//每秒移动距离
+        this.r = r;
+        this.width = r;
+        this.height =r;
+        this.direction = dir;
+        this.id = id;
+        this.style = style;
+    };
+    Shot.prototype = {
+        draw: function(context) {//绘圆形
+            context.beginPath();
+            context.fillStyle = this.style;
+            context.arc(this.x, this.y, this.r, 0, 2*Math.PI);
+            context.fill();
+        }
+    };
+
+    var Eraser = function(x, y, width, height, style){//黑板擦
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.style = style;
+    };
+    Eraser.prototype = {
+        draw: function(context){
+            context.fillStyle = this.style;
+            context.fillRect(this.x, this.y, this.width, this.height);
+        }
+    };
+
+    var Notice = function (x, y, width, text, style) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.text = text;
+        this.style = style;
+
+    };
+    Notice.prototype={
+        draw: function (context) {
+            context.fillStyle = this.style;
+            context.font = '18px Arial';
+            context.fillText(this.text,this.x,this.y, this.maxWidth);
+
+        }
+    };
+    var ObjectPool = function(wall, stoneNums){
+        this.wall = wall;
+        this.objects = [];
+        this.stoneNums = stoneNums || 7;
+        this.createObjects();
+        console.log('objects', this.objects);
+
+    };
+    ObjectPool.prototype = {
+        createStones: function (rolewidth) {//以role为单位创建格子
+            var _this = this;
+            var rows = 4;
+            var box_width = rolewidth*2;
+            var total_width = this.wall.x;
+            var total_height = this.wall.y + box_width*2;
+            for(var i=0;i<rows;i++){//3行  //生成2边 两边内再生成盒子 以此类推
+                var innerNum = parseInt(1+Math.random()*3);
+                var line_maxheight = 0;
+                var rect = Math.random()*10;
+                for(var j=0;j<innerNum;j++){   //首先规定生成3行,然后每行随机生成几个,每行每个障碍物最低间隔多少
+                    var width;
+                    var height;
+                    if(rect>=4) {
+                        height = parseInt(Math.random() * 3) * box_width + box_width*2;
+                        width = rolewidth*4;
+                    }else{
+                        width = parseInt(Math.random() * 3) * box_width + box_width*2;
+                        height = rolewidth*4;
+                    }
+
+                    var interval_width = parseInt(Math.random()*4)*box_width + box_width*2;
+                    if(j===0){
+                        total_width = parseInt(Math.random()*3)*2*box_width;//每行首个间距
+                    }
+                    if(height > line_maxheight){
+                        line_maxheight = height;
+                    }
+                    // console.log(total_width, total_height);
+                    var stone = new Stone(total_width, total_height, width, height,'#000');
+                    _this.objects.push(stone);
+                    total_width = width + interval_width + total_width;
+                }
+                total_width =_this.wall.x;
+                total_height = line_maxheight +total_height+box_width*2;
+            }
+            _this.stoneNums =  _this.objects.length;
+            var stones = _this.objects;
+            //console.log(_this.stoneNums, stones);
+            //初始化地图
+            setMaps(box_width);
+            //把障碍物映射到地图上
+            setMapblock(stones, _this.stoneNums, box_width);
+            //console.log('Maps', Maps);
+        },
+        createObjects: function() {
+            var roleWid = 15;
+            var _this = this;
+            this.createStones(roleWid);
+            //纠正坐标以便计算
+            var r_x = roleWid*2 * Math.floor(canvasWh.w/(roleWid*4))+roleWid; //x
+            //console.log('======',canvasWh.w/(roleWid*4));
+            var notice = new Notice(canvasWh.text.x, canvasWh.text.y, canvasWh.text.width, '当前关卡: ' + level, '#009a61');
+            this.objects.push(notice);
+            var t_x = r_x-roleWid;
+
+            var enemys = genEnemy(roleWid);
+            enemys.forEach(function(enemy, index){
+                var ene = new Enemy(enemy.x, enemy.y, roleWid*0.8, index, '#e27e7e');
+                setMapSin(ene, roleWid*2);
+                _this.objects.push(ene);
+            });
+            console.log('enemys' , enemys);
+            //设置target 附近无障碍区
+            var eaer = new Eraser(6*roleWid, this.wall.height-roleWid*2, this.wall.width -12*roleWid, 2*roleWid, '#C0C0C0');
+            console.log('无障碍区',   eaer);
+            this.objects.push(eaer);
+            var role = new Sprite(this.wall.x +　r_x, this.wall.y + roleWid, roleWid, '#009a61');
+            this.objects.push(role);
+            var target = new Target(t_x, this.wall.y + this.wall.height-roleWid*2,roleWid*2,roleWid*2,'#d2994f');
+            this.objects.push(target);
+            //设置target 附近无障碍区
+            setMapblock([eaer], 1, roleWid*2 , 0);
+        },
+        draw: function(context) {//绘制池中每一个对象
+            var _this = this;
+            this.objects.forEach(function(item) {//检测碰撞
+                if(item instanceof Sprite){ //鼠标操作和键盘操作
+                    var sprite = item.draw(context, false);
+                    var isColide = _this.collide(sprite, _this.stoneNums);
+                    item.draw(context, isColide);
+                }else{
+                    item.draw(context);
+                }
+
+            });
+        },
+        collide: function(obj,stoneNums) {
+            var _this = this;
+            if(_this.collideWalls(obj)){
+                console.log('collideWalls');
+                return true;
+            }
+            if(_this.collideStones(obj,stoneNums)){
+                console.log('-------',stoneNums);
+                return true;
+            }
+            return false;
+        },
+        collideWalls: function(obj) {//精灵与墙是否碰撞
+            //console.log('obj', obj);
+            if(obj.x - this.wall.x < obj.r || obj.x+obj.r >this.wall.width+this.wall.x){//R+(wall.x)不能小于圆心x坐标,wall.x+width>arc.x+r|| obj.x + obj.r < this.wall.x + this.wall.width
+
+                return true;
+            }else if(obj.y - this.wall.y < obj.r || obj.y + obj.r > this.wall.y + this.wall.height){//||
+
+                return true;
+            }
+            return false;
+        },
+//
+//     圆形O与矩形R四个边相交
+//     O 在 R-top: O的切点坐标(R.x,O.y + O.r) R的切面范围（R.x,R.y）=>(R.x+R.w,R.y)
+//     	即：（O.y+O.r<=R.y）//圆心距离矩形的上面最低保持半径的长度
+//     O在R-bottom: O的切点坐标（R.x + R.h, O.y-O.r）
+//     	即： （R.y+R.h<=O.y-O.R）//矩形的高度不能超过圆心-半径的高度
+//     O在R-left:O的切点坐标（O.x+O.r,O.y）
+//     	即： （O.x+O.r<=R.x）//圆心到矩形的左边距离不能超过半径长度
+//     O在R-right:O的切点坐标（O.x+O.r,O.y）
+//     	即：	（R.x+R.w<=O.x-O.r）
+//     圆形与矩形的四个角相交（圆心到矩形四角某点的距离大于半径即可）
+//     O在 R-top-left:O的切点坐标在（R.x, R.y）
+//      	即： （R.x-O.x）平方 +（R.y-O.y)的平方开平方跟
+//     O在 R-top-right：O的切点坐标为（R.x+R.w,R.y）
+//     	即：	（O.x-(R.x+R.w)）平方 + （R.y-O.y）平方 开平方根
+//     O在 R-bottom-left: O的切点坐标（R.x, R.y+R.h）
+//       与圆心算距离
+//     O在 R-bottom-right: O的切点坐标（R.x+R.w,R.y+R.h）
+        collideStones: function(splite, stoneNums) {//精灵与障碍物是否碰撞
+            var _this = this;
+            var isColide = false;
+            for(var i=0;i<stoneNums;i++){
+                var stone = _this.objects[i];
+                // if(){ //||  ||  ||
+                //   return true;
+                //}
+                if(stone.x<=splite.x && splite.x<=stone.x+stone.width && splite.y < stone.y){
+                    if(splite.y + splite.r > stone.y){
+                        return true;
+                    }
+                }
+                if(stone.x<=splite.x && splite.x<=stone.x+stone.width && splite.y > stone.y){
+                    if(stone.y + stone.height > splite.y - splite.r){
+                        return true;
+                    }
+                }
+                if(stone.y<=splite.y&&splite.y<=stone.y+stone.height && stone.x>splite.x){
+                    if(splite.x+splite.r>stone.x){
+                        return true;
+                    }
+                }
+                if(stone.y<=splite.y&&splite.y<=stone.y+stone.height && stone.x<splite.x){
+                    if(stone.x+stone.width>splite.x-splite.r){
+                        return true;
+                    }
+                }
+                var left_top = Math.sqrt(Math.pow(stone.x-splite.x, 2) + Math.pow(stone.y-splite.y,2));
+                var right_top = Math.sqrt(Math.pow(stone.x+stone.width-splite.x, 2) + Math.pow(stone.y-splite.y,2));
+                var left_bot = Math.sqrt(Math.pow(stone.x-splite.x, 2) + Math.pow(stone.y+stone.height-splite.y,2));
+                var right_bot = Math.sqrt(Math.pow(stone.x+stone.width-splite.x, 2) + Math.pow(stone.y+stone.height-splite.y,2));
+                if(left_bot<splite.r||right_bot<splite.r||left_top<splite.r||right_top<splite.r){
+                    return true;
+                }
+            }
+            return isColide;
+        }
+    };
+
+    var findRequestAnimationFrame = function() {
+        return window.requestAnimationFrame        ||
+                window.webkitRequestAnimationFrame  ||
+                window.mozRequestAnimationFrame     ||
+                window.oRequestAnimationFrame       ||
+                window.msRequestAnimationFrame      ||
+                function(callback, element){
+                    window.setTimeout(callback, 1000 / 30);
+                };
+    };
+    function init() {
+        var canvas = document.getElementById('canvas');
+        canvas.width = canvasWh.w;
+        canvas.height = canvasWh.h;
+
+        var context = canvas.getContext('2d');
+        var renderFrame = findRequestAnimationFrame();
+        var objects = [];
+        var shotObjs = [];
+        var drawScene = function() { //初始化画布
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            //context.save();
+            objects.forEach(function(item) {//重绘画布所有元素,但是对象属性依靠js保持
+                if(item.draw) item.draw(context);
+            });
+            //context.restore();
+        };
+        var wall = new Wall(0, 0, canvasWh.w, canvasWh.h);
+        objects.push(wall);
+        objects.push(new ObjectPool(wall, 7));
+        console.log('----', objects);
+        var objs = objects[1].objects;
+        //设置target 和 start 坐标， 获取路径
+        var role = objs[objs.length-2];
+        console.log(role);
+        var target = objs[objs.length-1];
+        drawScene();
+
+
+        function getDirect(){
+            var dir = parseInt(Math.random()*4);
+            var direct = 'up';
+            switch (dir){
+                case 0:
+                    direct = 'up';
+                    break;
+                case 1:
+                    direct = 'down';
+                    break;
+                case 2:
+                    direct = 'left';
+                    break;
+                case 3:
+                    direct = 'right';
+                    break;
+            }
+            return direct;
+        }
+        function enemyShot() {
+            objs.forEach(function(item){
+                if(item instanceof Enemy){
+                    if(item.shotNum < item.maxShotNum){
+                        var direction = getDirect();
+                        var shot = new Shot(item.x, item.y, role.r*0.3, item.id, direction, '#e27e7e');
+                        item.shotNum ++ ;
+                        shotObjs.push(shot);
+                        objects.unshift(shot);
+                    }
+                }
+            });
+        }
+
+        // 渲染子弹射出
+        //子弹数组， 每个子弹有颜色，方向，速度
+        //出界后摧毁对象
+        console.log('========', objs);
+        function renderShots() {
+            var shotID= setInterval(function () {
+                enemyShot();
+                shotObjs.forEach(function (item) {//渲染
+                    switch (item.direction){
+                        case 'up':
+                            item.y -= item.speed;
+                            break;
+                        case 'down':
+                            item.y += item.speed;
+                            break;
+                        case 'left':
+                            item.x -= item.speed;
+                            break;
+                        case 'right':
+                            item.x += item.speed;
+                            break;
+
+                    }
+                    renderFrame(drawScene);
+                    //if(item.draw) item.draw(context);
+                });
+                shotObjs.forEach(function (item, index) {
+                    var fadeBullet = false;
+                    //检测出界或者碰到障碍物则销毁
+                    if(item.y<-item.r || item.y > canvas.height + item.r || item.x < -item.r || item.x > item.r + canvas.width || isStone(Maps, item, role)){
+                        if(item.id.indexOf('enemy') >= 0){//检测是否为敌弹
+                            objs.forEach(function(enemy){
+                                if(enemy instanceof Enemy &&　item.id == enemy.id){// 修改敌人的可发射子弹数量
+                                    enemy.shotNum --;
+                                }
+                            });
+                        }
+                        fadeBullet = true;
+                    }
+                    // 检测角色是否射击到敌人
+                    if(item.id.indexOf('role')>=0){
+
+                        objs.forEach(function(obj, i){
+                            if(obj instanceof Enemy &&　isWin(obj, item)){//
+                                objs.splice(i, 1);
+                                fadeBullet = true;
+                            }
+                        });
+                    }
+
+                    //检测是否子弹撞击到角色
+                    if(isWin(role, item) && item.id.indexOf('enemy')>=0){
+                        //销毁子弹
+                        fadeBullet = true;
+                        //销毁角色
+                        objs.splice(objs.length-2,1);//或者直接移除属性
+                        //游戏结束
+                        console.log('GAME OVER！');
+                        clearInterval(shotID);
+                        if(confirm('GAME OVER')){
+                            level =0 ;
+                            sessionStorage.level = level;
+                            location.reload();
+                        }
+                    }
+
+                    if(fadeBullet){//是否销毁子弹
+                        objects.splice(shotObjs.length-index-1,1);
+                        shotObjs.splice(index, 1);
+                    }
+
+                });
+                //检测是否撞到敌人 、、扩展功能
+
+            }, 500);
+
+        }
+
+        function roleShot(role){
+            var direction = role.direction;//人物的子弹只有四个方向
+            //生成方向和起始点
+            var shot = new Shot(role.x, role.y, role.r*0.5, 'role', direction, '#009a61');
+            shot.speed = 30;
+            shotObjs.push(shot);
+            objects.unshift(shot);
+        }
+        var renderPathid;
+        var isRunning = false;
+        function renderPath(pxPath) {
+            isRunning = true;//正在行走
+            renderPathid = setInterval(function(){
+                if(pxPath.length>0){
+                    var item = pxPath.shift();
+                    keysDown.push(item);
+                    renderFrame(drawScene);
+                }
+
+            }, 100);
+        }
+        function doKeyDown(e) {
+            var keyID = e.keyCode;
+            console.log('===18', keyID);// q = 18的时候 发射子弹
+            if(keyID == 81){
+                roleShot(role);
+            }else {
+                keysDown.push(keyID);
+                renderFrame(drawScene);
+            }
+
+        }
+        function doClickDown(e) {
+            var targetV = {
+                x: e.x,
+                y: e.y
+            };
+            console.log('===', e);
+            if(isRunning){//正在行走，关闭渲染
+                clearInterval(renderPathid);
+                isRunning = false;
+                doClickDown(e);
+                return;
+            }
+            var isclickEnemy = isClickEnemy(targetV, objs, role);
+            if(isStone(Maps, targetV ,role)) {
+                if(isclickEnemy){
+                    roleShot(role);
+                }
+                return;
+            }
+            //box路径
+            var path = findway(Maps, role, targetV);
+            if(path == false) return;
+            //转换为role像素路径
+            var pxPath = getPathPx(role, path);
+            renderPath(pxPath);
+        }
+        intervalID = setInterval(function () {
+            //console.log('isWin', isWin(role, target));
+            if(isWin(role, target)){
+                //console.log('role====', intervalID);
+                if(confirm('恭喜,你点击确认进入下一关')){
+                    level ++ ;
+                    sessionStorage.level = level;
+                    clearInterval(intervalID);
+                    location.reload();
+                }
+            }
+        },1000);
+        //console.log('path:', path);
+        renderShots();
+        window.addEventListener('keydown', doKeyDown, true);
+        window.addEventListener('click',doClickDown,true);
+    }
+    window.onload = init;
+</script>
+</html>

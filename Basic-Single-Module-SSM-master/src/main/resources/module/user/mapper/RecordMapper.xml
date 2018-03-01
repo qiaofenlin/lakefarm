@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lakefarm.mapper.RecordMapper">
+    <resultMap id="getRecord" type="com.lakefarm.pojo.Record">
+        <id column="record_id" property="record_id"/>
+        <result property="u_id" column="u_id"/>
+        <result property="question_type" column="question_type"/>
+        <result property="record_time" column="record_time"/>
+        <result property="record_score" column="record_score"/>
+    </resultMap>
+
+    <!--增加Record-->
+    <insert id="addRecord" parameterType="com.lakefarm.pojo.Record">
+        insert into record values
+        (#{record_id},#{u_id},#{record_time},#{record_score},#{question_type});
+    </insert>
+
+    <!--删除Record-->
+    <delete id="deleteRecord" parameterType="String">
+        delete from record where record_id=#{record_id};
+    </delete>
+
+    <!--更新Record-->
+    <update id="updateRecord" parameterType="com.lakefarm.pojo.Record">
+        update record
+        <set>
+            <if test="question_type!=null and question_type!='' ">
+                question_type=#{question_type},
+            </if>
+            <if test="u_id!=null and u_id!='' ">
+                u_id=#{u_id},
+            </if>
+            <if test="record_score!=null and record_score!='' ">
+                record_score=#{record_score},
+            </if>
+            <if test="record_time!=null and record_time!='' ">
+                record_time=#{record_time},
+            </if>
+
+            where record_id=#{record_id};
+        </set>
+    </update>
+
+
+    <!--通过id获取指定Record-->
+    <select id="getRecordById" parameterType="String" resultMap="getRecord">
+        select record_id,record_score,question_type,u_id,record_time from record where u_id=#{u_id}
+    </select>
+</mapper>

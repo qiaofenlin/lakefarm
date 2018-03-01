@@ -1,0 +1,120 @@
+<html>
+<head>
+    <title>相册</title>
+    <meta charset="utf-8" />
+    <meta name ="viewport" content ="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
+    <link href="album.css" rel="stylesheet" type="text/css"/>
+    <style type="text/css">
+
+        body {
+            background-color: #c4e3f3;
+        }
+        .puzzle {
+
+            width: 300px;
+            height: 200px;
+            border: 20px solid transparent;
+            margin-bottom: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            border-image:url(./images/border.jpg) 30 30 round;
+        }
+        .falls {
+            width: 350px;
+            height: 350px;
+            box-sizing: border-box;
+            border: 20px solid #ffff00;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            border-image:url(./images/border1.gif) 30 30 round;
+        }
+        .barrel {
+            width: 350px;
+            min-height: 350px;
+            border: 20px solid transparent;
+            margin-bottom: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            border-image:url(./images/border1.jpg) 30 30 round;
+
+
+        }
+    </style>
+
+</head>
+<body>
+
+    <div id="container">
+        <a href="../questionTest.html">点击进入调查问卷项目</a>
+        <div class="puzzle">
+            <img src="./images/img0.jpg">
+        </div>
+        <div class="puzzle">
+            <img src="./images/img2.jpg">
+            <img src="./images/img0.jpg">
+        </div>
+        <div class="puzzle">
+            <img src="./images/img0.jpg">
+            <img src="./images/img1.jpg">
+            <img src="./images/img2.jpg">
+        </div>
+        <div class="puzzle">
+            <img src="./images/img0.jpg">
+            <img src="./images/img1.jpg">
+            <img src="./images/img2.jpg">
+            <img src="./images/img3.jpg">
+        </div>
+        <div class="puzzle">
+            <img src="./images/img0.jpg">
+            <img src="./images/img1.jpg">
+            <img src="./images/img2.jpg">
+            <img src="./images/img3.jpg">
+            <img src="./images/img4.jpg">
+        </div>
+
+        <div class="puzzle">
+            <img src="./images/img2.jpg">
+            <img src="./images/img0.jpg">
+            <img src="./images/img3.jpg">
+            <img src="./images/img4.jpg">
+            <img src="./images/img1.jpg">
+            <img src="./images/img5.jpg">
+        </div>
+        <div class="waterfall_5 falls">
+            <img src="./images/img2.jpg">
+            <img src="./images/img0.jpg">
+            <img src="./images/img3.jpg">
+            <img src="./images/img4.jpg">
+            <img src="./images/img1.jpg">
+            <img src="./images/img5.jpg">
+        </div>
+        <div class="barrel">
+            <img src="./images/img2.jpg">
+            <img src="./images/img0.jpg">
+            <img src="./images/img3.jpg">
+            <img src="./images/img4.jpg">
+            <img src="./images/img1.jpg">
+            <img src="./images/img5.jpg">
+            <img src="./images/img2.jpg">
+            <img src="./images/img0.jpg">
+            <img src="./images/img3.jpg">
+            <img src="./images/img4.jpg">
+            <img src="./images/img1.jpg">
+            <img src="./images/img5.jpg">
+        </div>
+    </div>
+
+</body>
+
+<script src="album.js"></script>
+    <script>
+        window.ifeAlbum.setGutter('PUZZLE',2);
+        window.ifeAlbum.setGutter('WATERFALL',2);
+        window.ifeAlbum.setGutter('BARREL',2);
+        window.ifeAlbum.run();
+
+    </script>
+
+</html>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lakefarm.mapper.PersonGrowPlantsMapper">
+    <resultMap id="getPersonGrow" type="com.lakefarm.pojo.PersonGrowPlants">
+        <id column="uzz_id" property="uzz_id"/>
+        <result property="u_id" column="u_id"/>
+        <result property="zz_id" column="zz_id"/>
+        <result property="zz_count" column="zz_count"/>
+    </resultMap>
+
+    <!--增加任务-->
+    <insert id="addPersonGrow" parameterType="com.lakefarm.pojo.PersonGrowPlants">
+        insert into person_growplants values
+        (#{uzz_id},#{u_id},#{zz_id},#{zz_count});
+    </insert>
+
+    <!--删除任务-->
+    <delete id="deletePersonGrow" parameterType="String">
+        delete from person_growplants where uzz_id=#{uzz_id};
+    </delete>
+
+    <!--更新任务-->
+    <update id="updatePersonGrow" parameterType="com.lakefarm.pojo.PersonGrowPlants">
+        UPDATE person_growplants
+        <trim prefix="set" suffixOverrides=",">
+            <if test="u_id!=null">u_id=#{u_id},</if>
+            <if test="zz_id!=null">zz_id=#{zz_id},</if>
+            <if test="zz_count!=null">zz_count=#{zz_count},</if>
+        </trim>
+        WHERE uzz_id=#{uzz_id}
+    </update>
+
+    <!--通过uzz_id获取指定任务-->
+    <select id="getPersonGrowById" parameterType="String" resultMap="getPersonGrow">
+        select uzz_id,u_id,zz_id,zz_count from person_growplants where uzz_id=#{uzz_id}
+    </select>
+
+    <!--通过u_id获取指定任务-->
+    <select id="getPersonGrowByUid" parameterType="String" resultMap="getPersonGrow">
+        select uzz_id,u_id,zz_id,zz_count from person_growplants where u_id=#{u_id}
+    </select>
+
+    <!--通过u_id和uzz_id获取指定任务-->
+    <select id="getPersonGrowByUzzid" parameterType="String" resultMap="getPersonGrow">
+        select uzz_id,u_id,zz_id,zz_count from person_growplants where uzz_id=#{uzz_id}
+    </select>
+
+</mapper>
